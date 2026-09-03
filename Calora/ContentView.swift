@@ -148,7 +148,7 @@ struct ContentView: View {
 
                 if !gununKayitlari.isEmpty || Calendar.current.isDateInToday(seciliGun) {
                     ozetKart
-                    Divider()
+                        .padding(.horizontal)
                     
                 }
 
@@ -262,6 +262,7 @@ struct ContentView: View {
                     .foregroundStyle(kalan >= 0 ? .green : .red)
             }
 
+
             ProgressView(value: min(Double(toplamKalori), Double(ayarliHedef)), total: Double(max(ayarliHedef, 1)))
                 .tint(kalan >= 0 ? .green : .red)
 
@@ -271,26 +272,15 @@ struct ContentView: View {
                 makroBar("Yağ", toplamYag, Double(hedef.yag), .purple)
             }
         }
-        .padding()
+        .padding(16)
         .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+
+
     }
     
     
-//    private func makroBar(_ ad: String, _ mevcut: Double, _ hedef: Double, _ renk: Color) -> some View {
-//        VStack(spacing: 2) {
-//            HStack {
-//                Text(ad)
-//                    .font(.caption)
-//                Spacer()
-//                Text("\(Int(mevcut)) / \(Int(hedef)) g")
-//                    .font(.caption)
-//                    .foregroundStyle(.secondary)
-//            }
-//            ProgressView(value: mevcut, total: hedef)
-//                .tint(renk)
-//        }
-//    }
-    
+
     //aşılırsa kırmızı oluyor renkli çizgiler.
     private func makroBar(_ ad: String, _ mevcut: Double, _ hedef: Double, _ renk: Color) -> some View {
         let asildi = mevcut > hedef

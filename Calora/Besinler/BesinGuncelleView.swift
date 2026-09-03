@@ -23,7 +23,6 @@ struct BesinGuncelleView: View {
     @State private var yagText = ""
     @State private var tuzText = ""
     @State private var markaText = ""
-    @State private var barkodText = ""
     @State private var kategoriText = ""
 
     @State private var secilenFoto: PhotosPickerItem?
@@ -147,12 +146,6 @@ struct BesinGuncelleView: View {
                             .multilineTextAlignment(.trailing)
                     }
                     HStack {
-                        Text("Barkod")
-                        Spacer()
-                        TextField("86000", text: $barkodText)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    HStack {
                         Text("Kategori")
                         Spacer()
                         TextField("Süt ürünleri", text: $kategoriText)
@@ -191,7 +184,6 @@ struct BesinGuncelleView: View {
         yagText = besin.yag != nil ? "\(besin.yag!)" : ""
         tuzText = besin.tuz != nil ? "\(besin.tuz!)" : ""
         markaText = besin.marka ?? ""
-        barkodText = besin.barkod ?? ""
         kategoriText = besin.kategori ?? ""
     }
     private func kaydet() async {
@@ -216,7 +208,6 @@ struct BesinGuncelleView: View {
                 yag: makroSayi(yagText),
                 tuz: makroSayi(tuzText),
                 marka: markaText.trimmingCharacters(in: .whitespaces),
-                barkod: barkodText.trimmingCharacters(in: .whitespaces),
                 kategori: kategoriText.trimmingCharacters(in: .whitespaces),
                 fotoData: kucukFoto
             )
@@ -252,7 +243,6 @@ struct BesinGuncelleView: View {
         seker: 4.0,
         yag: 1.5,
         marka: "Pınar",
-        barkod: "8690000000000",
         kategori: "Süt Ürünü",
         tuz: 0.3
     ))

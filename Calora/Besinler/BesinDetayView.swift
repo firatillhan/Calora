@@ -95,7 +95,6 @@ struct BesinDetayView: View {
                 makroSatiri("Yağ", besin.yag)
                 makroSatiri("Tuz", besin.tuz)
                 metinSatiri("Marka", besin.marka)
-                metinSatiri("Barkod", besin.barkod)
             }
             .padding()
         }
@@ -193,7 +192,6 @@ struct BesinDetayView: View {
         seker: 4.0,
         yag: 1.5,
         marka: "Pınar",
-        barkod: "8690000000000",
         kategori: "Süt Ürünü",
         tuz: 0.3
     ))

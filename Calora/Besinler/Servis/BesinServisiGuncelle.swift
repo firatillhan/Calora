@@ -21,7 +21,6 @@ enum BesinServisiGuncelle  {
         yag: Double?,
         tuz: Double?,
         marka: String,
-        barkod: String,
         kategori: String,
         fotoData: Data?
     ) async throws -> Bool {
@@ -48,7 +47,6 @@ enum BesinServisiGuncelle  {
         govde.append(MultipartYardimci.alanEkle(sinir: sinir, ad: "yag", deger: MultipartYardimci.makroMetin(yag)))
         govde.append(MultipartYardimci.alanEkle(sinir: sinir, ad: "tuz", deger: MultipartYardimci.makroMetin(tuz)))
         govde.append(MultipartYardimci.alanEkle(sinir: sinir, ad: "marka", deger: marka))
-        govde.append(MultipartYardimci.alanEkle(sinir: sinir, ad: "barkod", deger: barkod))
         govde.append(MultipartYardimci.alanEkle(sinir: sinir, ad: "kategori", deger: kategori))
 
         if let fotoData {

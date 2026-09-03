@@ -190,7 +190,6 @@ struct BesinEkleView: View {
                 yag: makroSayi(yagText),
                 tuz: makroSayi(tuzText),
                 marka: markaText.trimmingCharacters(in: .whitespaces),
-                barkod: barkodText.trimmingCharacters(in: .whitespaces),
                 kategori: kategoriText.trimmingCharacters(in: .whitespaces),
                 fotoData: kucukFoto
             )

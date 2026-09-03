@@ -25,7 +25,6 @@ struct Besin: Codable, Identifiable {
     let seker: Double?
     let yag: Double?
     let marka: String?
-    let barkod: String?
     let kategori: String?
     let tuz: Double?
 }
