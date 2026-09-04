@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import FoundationModels
 
 struct BesinEkleView: View {
     @Environment(\.dismiss) private var dismiss
@@ -21,7 +22,6 @@ struct BesinEkleView: View {
     @State private var yagText = ""
     @State private var tuzText = ""
     @State private var markaText = ""
-    @State private var barkodText = ""
     @State private var kategoriText = ""
     
     @State private var secilenFoto: PhotosPickerItem?
@@ -32,6 +32,26 @@ struct BesinEkleView: View {
     @State private var kameraAcik = false
     @State private var secimAcik = false
     @State private var galeriAcik = false
+    
+    
+    @State private var hesaplaniyor: Bool = false
+    @State private var uyariGoster: Bool = false
+    
+    private var modelKullanilabilir: Bool {
+        if #available(iOS 26, *) {
+            let durum = SystemLanguageModel.default.availability
+            print("Model durumu:", durum)
+            switch durum {
+            case .available:
+                return true
+            default:
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+    
     
     var body: some View {
         NavigationStack {
@@ -71,22 +91,11 @@ struct BesinEkleView: View {
                         TextField("", text: $kategoriText)
                             .multilineTextAlignment(.trailing)
                     }
-                    HStack {
-                        Text("Barkod")
-                        Spacer()
-                        TextField("", text: $barkodText)
-                            .multilineTextAlignment(.trailing)
-                    }
+                 
                 }
 
                 Section("Kalori ve Porsiyon") {
-                    HStack {
-                        Text("Kalori")
-                        Spacer()
-                        TextField("", text: $kaloriText)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
-                    }
+
                     HStack {
                         Text("Miktar")
                         Spacer()
@@ -99,6 +108,27 @@ struct BesinEkleView: View {
                         Text("Gram").tag("gram")
                     }
                     .pickerStyle(.segmented)
+                    
+                    Button("Kalori Hesapla") {
+                   
+                            Task {
+                                if #available(iOS 26, *) {
+                                    await kaloriHesapla()
+                                }
+                            }
+                        
+                    }
+                    .disabled(!modelKullanilabilir)
+                    HStack {
+                        Text("Kalori")
+                        Spacer()
+                        TextField("", text: $kaloriText)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                        if hesaplaniyor {
+                            ProgressView()
+                        }
+                    }
                 }
 
                 Section("Makrolar") {
@@ -108,6 +138,9 @@ struct BesinEkleView: View {
                         TextField("", text: $proteinText)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
+                        if hesaplaniyor {
+                            ProgressView()
+                        }
                     }
                     HStack {
                         Text("Karbonhidrat (g)")
@@ -115,6 +148,9 @@ struct BesinEkleView: View {
                         TextField("", text: $karbonhidratText)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
+                        if hesaplaniyor {
+                            ProgressView()
+                        }
                     }
                     HStack {
                         Text("Şeker (g)")
@@ -122,6 +158,9 @@ struct BesinEkleView: View {
                         TextField("", text: $sekerText)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
+                        if hesaplaniyor {
+                            ProgressView()
+                        }
                     }
                     HStack {
                         Text("Yağ (g)")
@@ -129,6 +168,9 @@ struct BesinEkleView: View {
                         TextField("", text: $yagText)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
+                        if hesaplaniyor {
+                            ProgressView()
+                        }
                     }
                     HStack {
                         Text("Tuz (g)")
@@ -136,6 +178,9 @@ struct BesinEkleView: View {
                         TextField("", text: $tuzText)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
+                        if hesaplaniyor {
+                            ProgressView()
+                        }
                     }
                 }
             }
@@ -211,6 +256,51 @@ struct BesinEkleView: View {
         let sonuc = Double(temiz)
         return sonuc
     }
+    
+    @available(iOS 26, *)
+    private func kaloriHesapla() async {
+        hesaplaniyor = true
+        
+        let session = LanguageModelSession()
+        let girdi = "\(miktarText) \(porsiyonBirim) \(isim)"
+        print("AI'ye gönderilen girdi:", girdi)
+
+        let sonuc = try? await session.respond(to:girdi, generating: BesinBilgisiAI.self)
+        print("AI sonucu:", sonuc?.content as Any)
+        let kalori = sonuc?.content.kalori
+        let protein = sonuc?.content.protein
+        let yag = sonuc?.content.yag
+        let karbonhidrat = sonuc?.content.karbonhidrat
+        let seker = sonuc?.content.seker
+        let tuz = sonuc?.content.tuz
+        
+        if let kalori {
+            kaloriText = "\(kalori)"
+        }
+        
+        if let protein {
+            proteinText = "\(protein)"
+        }
+        
+        if let yag {
+            yagText = "\(yag)"
+        }
+        
+        if let karbonhidrat {
+            karbonhidratText = "\(karbonhidrat)"
+        }
+        
+        if let seker {
+            sekerText = "\(seker)"
+        }
+        
+        if let tuz {
+            tuzText = "\(tuz)"
+        }
+        
+        hesaplaniyor = false
+    }
+    
 }
 
 #Preview {
